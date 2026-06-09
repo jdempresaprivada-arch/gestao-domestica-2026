@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><base href="https://d16ilfvy4mv02r.cloudfront.net/workspaces/PARhvdRACoaG7JTzg9ZhWrsPtDJKRvnB/4905a39d-d6aa-4ecc-9671-a0d40b41cd24/files/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Gestão Doméstica</title>
+<style>
+/* ════════════ VARIÁVEIS ════════════ */
+:root{
+  --p:#FFD700; --pd:#B8A000; --bg:#0A0A0A; --s1:#181818; --s2:#222;
+  --s3:#2a2a2a; --tx:#fff; --tx2:#999; --ok:#4CAF50; --err:#f44;
+  --warn:#FFA000; --info:#29B6F6; --r:14px;
+}
+/* ════════════ BASE ════════════ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);
+  font-family:'Segoe UI',system-ui,sans-serif;font-size:14px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ════════════ SCREENS ════════════ */
+.scr{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg)}
+.scr.on{display:flex}
+
+/* ════════════ SPLASH ════════════ */
+#sSplash{align-items:center;justify-content:center;gap:0}
+#sSplash .logo{font-size:72px;animation:pop .9s cubic-bezier(.2,1.4,.4,1) forwards}
+#sSplash .title{font-size:36px;font-weight:900;color:var(--p);text-align:center;
+  letter-spacing:1px;margin:10px 0 6px;
+  text-shadow:3px 3px 0 #0006,0 0 24px var(--p);
+  opacity:0;animation:riseIn .7s .5s forwards}
+#sSplash .sub{color:#ccc;font-size:13px;opacity:0;animation:riseIn .6s 1s forwards;margin-bottom:28px}
+#sSplash .bar{width:160px;height:4px;background:#333;border-radius:2px;overflow:hidden}
+#sSplash .bar span{display:block;height:100%;background:var(--p);border-radius:2px;width:0;
+  animation:load 2.4s .2s linear forwards}
+@keyframes pop{0%{transform:scale(0) rotateY(-90deg)}60%{transform:scale(1.1) rotateY(8deg)}100%{transform:scale(1) rotateY(0)}}
+@keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes load{to{width:100%}}
+
+/* ════════════ LOGIN ════════════ */
+#sLogin{align-items:center;justify-content:center;padding:20px;gap:0}
+.ln-logo{font-size:52px;margin-bottom:6px}
+.ln-title{font-size:24px;font-weight:800;color:var(--p);
+  text-shadow:2px 2px 0 #0006;margin-bottom:4px}
+.ln-sub{color:var(--tx2);font-size:13px;margin-bottom:24px;text-align:center}
+/* dots */
+.dots{display:flex;gap:14px;margin-bottom:12px}
+.dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--p);transition:.15s}
+.dot.f{background:var(--p);box-shadow:0 0 8px var(--p)8}
+/* error */
+.ln-err{min-height:18px;font-size:12px;color:var(--err);text-align:center;margin-bottom:8px}
+/* lockout */
+.lockout{font-size:44px;font-weight:900;color:var(--err);display:none;
+  text-shadow:0 0 16px var(--err)6;text-align:center;margin:12px 0}
+/* keypad */
+.kpad{display:grid;grid-template-columns:repeat(3,76px);gap:10px}
+.kk{width:76px;height:76px;border-radius:50%;border:2px solid #333;background:var(--s1);
+  color:var(--tx);font-size:22px;font-weight:600;transition:.12s;
+  display:flex;align-items:center;justify-content:center}
+.kk:active,.kk:hover{background:var(--s2);border-color:var(--p)}
+.kk:active{transform:scale(.9);background:var(--p);color:#000}
+.kk.ghost{background:transparent;border-color:transparent}
+/* bio btn */
+.bio-btn{margin-top:16px;font-size:36px;transition:.2s;padding:8px}
+.bio-btn:hover{transform:scale(1.1)}
+.bio-hint{font-size:11px;color:var(--tx2);margin-top:4px}
+
+/* ════════════ APP ════════════ */
+#sApp{flex-direction:column}
+/* bottom nav */
+.bnav{display:flex;background:var(--s1);border-top:1px solid var(--s3);
+  position:fixed;bottom:0;left:0;right:0;z-index:90}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:9px 0;gap:3px;color:var(--tx2);font-size:10px;cursor:pointer;transition:.2s}
+.nb .ni{font-size:22px;transition:.2s}
+.nb.on{color:var(--p)}
+.nb.on .ni{transform:translateY(-2px)}
+/* scroll area */
+.area{flex:1;overflow-y:auto;padding:14px 14px 88px;scrollbar-width:none}
+.area::-webkit-scrollbar{display:none}
+/* fab */
+.fab{position:fixed;bottom:74px;right:16px;width:54px;height:54px;border-radius:50%;
+  background:var(--p);color:#000;font-size:26px;box-shadow:0 4px 18px #0006;
+  z-index:95;display:flex;align-items:center;justify-content:center;transition:.2s}
+.fab:active{transform:scale(.92)}
+
+/* ════════════ CARDS ════════════ */
+.ph{font-size:20px;font-weight:700;color:var(--p);margin-bottom:14px;display:flex;align-items:center;gap:8px;
+  text-shadow:2px 2px 0 #0005}
+.card{background:var(--s1);border-radius:var(--r);padding:14px;margin-bottom:10px;
+  border:1px solid var(--s3)}
+.ct{font-size:13px;font-weight:700;color:var(--p);margin-bottom:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.sc{background:var(--s1);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--s3)}
+.sv{font-size:16px;font-weight:700;color:var(--p)}
+.sl{font-size:10px;color:var(--tx2);margin-top:2px}
+/* list item */
+.li{background:var(--s1);border-radius:var(--r);padding:12px;margin-bottom:8px;
+  border:1px solid var(--s3);display:flex;align-items:flex-start;gap:10px}
+.av{width:44px;height:44px;border-radius:50%;background:var(--p);display:flex;
+  align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ib{flex:1;min-width:0}
+.in{font-weight:600;font-size:15px;margin-bottom:2px}
+.is{font-size:11px;color:var(--tx2)}
+.iv{font-size:15px;font-weight:700;color:var(--p);margin-top:3px}
+.ia{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+/* badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin:2px 2px 0 0}
+.b-ok{background:#1a3a1a;color:var(--ok)}
+.b-w{background:#2a1a00;color:var(--warn)}
+.b-e{background:#2a1010;color:var(--err)}
+.b-i{background:#0a1e2a;color:var(--info)}
+.b-g{background:#1e1e1e;color:#aaa}
+
+/* ════════════ BUTTONS ════════════ */
+.btn{padding:11px 18px;border-radius:10px;font-size:14px;font-weight:600;transition:.15s;cursor:pointer}
+.btn-p{background:var(--p);color:#000}
+.btn-p:hover{background:var(--pd)}
+.btn-o{background:transparent;border:2px solid var(--p);color:var(--p)}
+.btn-o:hover{background:var(--p);color:#000}
+.btn-e{background:var(--s2);border:2px solid var(--err);color:var(--err)}
+.btn-f{width:100%}
+.btn-s{padding:6px 12px;font-size:12px;border-radius:8px}
+
+/* ════════════ FORMS ════════════ */
+.fl{font-size:12px;color:var(--tx2);margin-bottom:5px;display:block}
+.fi{width:100%;padding:11px 13px;background:var(--s2);border:1.5px solid var(--s3);
+  border-radius:10px;color:var(--tx);font-size:14px;transition:.2s;font-family:inherit}
+.fi:focus{border-color:var(--p)}
+.fi option{background:var(--s1)}
+.fg{margin-bottom:12px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ════════════ MODAL ════════════ */
+.mo{position:fixed;inset:0;background:#000b;z-index:200;
+  display:none;align-items:flex-end;justify-content:center}
+.mo.on{display:flex}
+.mb{background:var(--s1);border-radius:20px 20px 0 0;width:100%;max-width:520px;
+  padding:20px;max-height:88vh;overflow-y:auto;
+  animation:slideUp .28s cubic-bezier(.2,1,.4,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{font-size:17px;font-weight:700;color:var(--p);margin-bottom:16px;
+  display:flex;justify-content:space-between;align-items:center}
+.mx{font-size:24px;color:var(--tx2)}
+
+/* ════════════ TOGGLE ════════════ */
+.tog{width:46px;height:26px;border-radius:13px;background:#444;position:relative;
+  cursor:pointer;transition:.25s;flex-shrink:0}
+.tog.on{background:var(--p)}
+.tog::after{content:'';width:20px;height:20px;border-radius:50%;background:#fff;
+  position:absolute;top:3px;left:3px;transition:.25s;box-shadow:0 2px 4px #0004}
+.tog.on::after{left:23px}
+.tr{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--s3)}
+
+/* ════════════ ALARM CLOCK ════════════ */
+.at{font-size:34px;font-weight:700;color:var(--p)}
+
+/* ════════════ THEME GRID ════════════ */
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.tc{height:86px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:3px solid transparent;transition:.2s;
+  font-size:12px;font-weight:700;color:#fff;text-align:center;
+  text-shadow:1px 1px 4px #0006;padding:8px}
+.tc.sel{border-color:#fff;box-shadow:0 0 0 3px #fff3}
+
+/* ════════════ CHARTS (SVG) ════════════ */
+.chartbox{width:100%;padding:4px 0}
+.chartbox svg{display:block;width:100%;overflow:visible}
+
+/* ════════════ EMPTY ════════════ */
+.empty{text-align:center;padding:40px 20px;color:var(--tx2)}
+.empty .ei{font-size:44px;margin-bottom:10px}
+
+/* ════════════ PIN SETUP ════════════ */
+.psteps{display:flex;gap:8px;margin-bottom:20px}
+.pstep{flex:1;height:4px;border-radius:2px;background:#333;transition:.3s}
+.pstep.on{background:var(--p)}
+
+/* ════════════ TOAST ════════════ */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+  background:#222;color:#fff;padding:9px 20px;border-radius:20px;
+  font-size:13px;z-index:999;box-shadow:0 4px 16px #0008;border:1px solid #333;
+  white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
+#toast.show{opacity:1}
+
+/* ════════════ SHAKE ════════════ */
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-10px)}
+  30%{transform:translateX(10px)}45%{transform:translateX(-8px)}60%{transform:translateX(8px)}
+  75%{transform:translateX(-5px)}90%{transform:translateX(5px)}}
+.shake{animation:shake .5s ease}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SPLASH ══════════════ -->
+<div id="sSplash" class="scr on">
+  <div class="logo">🏠</div>
+  <div class="title">Gestão<br>Doméstica</div>
+  <div class="sub">✨ Sua gestão na palma da mão ✨</div>
+  <div class="bar"><span></span></div>
+</div>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="sLogin" class="scr">
+  <div class="ln-logo">🏠</div>
+  <div class="ln-title">Gestão Doméstica</div>
+  <div class="ln-sub">🔒 Digite seu PIN de acesso</div>
+  <div class="dots" id="dots">
+    <div class="dot" id="dt0"></div>
+    <div class="dot" id="dt1"></div>
+    <div class="dot" id="dt2"></div>
+    <div class="dot" id="dt3"></div>
+  </div>
+  <div class="ln-err" id="lErr"></div>
+  <div class="lockout" id="lockEl"></div>
+  <div class="kpad">
+    <button class="kk" onclick="pk('1')">1</button>
+    <button class="kk" onclick="pk('2')">2</button>
+    <button class="kk" onclick="pk('3')">3</button>
+    <button class="kk" onclick="pk('4')">4</button>
+    <button class="kk" onclick="pk('5')">5</button>
+    <button class="kk" onclick="pk('6')">6</button>
+    <button class="kk" onclick="pk('7')">7</button>
+    <button class="kk" onclick="pk('8')">8</button>
+    <button class="kk" onclick="pk('9')">9</button>
+    <button class="kk ghost" id="bioBtn" onclick="tryBio()">👆</button>
+    <button class="kk" onclick="pk('0')">0</button>
+    <button class="kk ghost" onclick="pd()">⌫</button>
+  </div>
+  <button class="bio-btn" id="bioBig" onclick="tryBio()" style="display:none">👆</button>
+  <div class="bio-hint" id="bioHint"></div>
+  <div style="margin-top:18px;color:var(--tx2);font-size:11px;opacity:.5">PIN padrão: 1234</div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="sApp" class="scr">
+  <div class="area" id="area">
+    <!-- conteúdo dinâmico -->
+  </div>
+  <button class="fab" id="fab" onclick="openFab()">＋</button>
+  <nav class="bnav">
+    <div class="nb on" onclick="go('dash',this)"><span class="ni">📊</span><span>Painel</span></div>
+    <div class="nb"    onclick="go('tasks',this)"><span class="ni">📋</span><span>Tarefas</span></div>
+    <div class="nb"    onclick="go('salary',this)"><span class="ni">💰</span><span>Salário</span></div>
+    <div class="nb"    onclick="go('alarms',this)"><span class="ni">🔔</span><span>Alarmes</span></div>
+    <div class="nb"    onclick="go('cfg',this)"><span class="ni">⚙️</span><span>Config</span></div>
+  </nav>
+</div>
+
+<!-- ══════════════ MODALS ══════════════ -->
+<!-- ADD TASK -->
+<div class="mo" id="mTask">
+  <div class="mb">
+    <div class="mh">📋 Nova Tarefa <button class="mx" onclick="cm('mTask')">✕</button></div>
+    <div class="fg"><label class="fl">Título *</label>
+      <input class="fi" id="tT" placeholder="Ex: Limpar cozinha"></div>
+    <div class="fg"><label class="fl">Descrição</label>
+      <input class="fi" id="tD" placeholder="Detalhes..."></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Categoria</label>
+        <select class="fi" id="tC">
+          <option>Limpeza</option><option>Cozinha</option><option>Lavanderia</option>
+          <option>Jardim</option><option>Compras</option><option>Organização</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Prioridade</label>
+        <select class="fi" id="tP">
+          <option value="2">🔴 Alta</option>
+          <option value="1" selected>🟡 Média</option>
+          <option value="0">🟢 Baixa</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Vencimento</label>
+      <input class="fi" id="tDt" type="date"></div>
+    <button class="btn btn-p btn-f" onclick="addTask()">💾 Salvar Tarefa</button>
+  </div>
+</div>
+
+<!-- ADD SALARY -->
+<div class="mo" id="mSal">
+  <div class="mb">
+    <div class="mh">💰 Novo Registro <button class="mx" onclick="cm('mSal')">✕</button></div>
+    <div class="fg"><label class="fl">Funcionário</label>
+      <input class="fi" id="sE" placeholder="Nome do funcionário"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Mês</label>
+        <select class="fi" id="sM">
+          <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+          <option value="3">Março</option><option value="4">Abril</option>
+          <option value="5">Maio</option><option value="6">Junho</option>
+          <option value="7">Julho</option><option value="8">Agosto</option>
+          <option value="9">Setembro</option><option value="10">Outubro</option>
+          <option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Ano</label>
+        <input class="fi" id="sY" type="number" value="2025"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Salário Base (R$)</label>
+        <input class="fi" id="sB" type="number" placeholder="1500"></div>
+      <div class="fg"><label class="fl">Dias Trabalhados</label>
+        <input class="fi" id="sDy" type="number" placeholder="22"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Horas Extras</label>
+        <input class="fi" id="sH" type="number" placeholder="0"></div>
+      <div class="fg"><label class="fl">Dias Extras</label>
+        <input class="fi" id="sEx" type="number" placeholder="0"></div>
+    </div>
+    <div class="card" id="sPrev" style="background:#0d1a0d;display:none;margin-bottom:10px">
+      <div style="color:var(--p);font-size:18px;font-weight:700" id="sPrevV"></div>
+      <div style="color:var(--tx2);font-size:12px;margin-top:4px" id="sPrevD"></div>
+    </div>
+    <button class="btn btn-o btn-f" style="margin-bottom:8px" onclick="calcSal()">🧮 Calcular Total</button>
+    <button class="btn btn-p btn-f" onclick="addSal()">💾 Salvar Registro</button>
+  </div>
+</div>
+
+<!-- ADD ALARM -->
+<div class="mo" id="mAlarm">
+  <div class="mb">
+    <div class="mh">🔔 Novo Alarme <button class="mx" onclick="cm('mAlarm')">✕</button></div>
+    <div class="fg">
+      <label class="fl">Tipo</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-p btn-s" id="at_go"     onclick="setAT('go')">🚗 Ir</button>
+        <button class="btn btn-o btn-s" id="at_leave"  onclick="setAT('leave')">🏠 Sair</button>
+        <button class="btn btn-o btn-s" id="at_extra"  onclick="setAT('extra')">⚡ Extra</button>
+        <button class="btn btn-o btn-s" id="at_custom" onclick="setAT('custom')">🔔 Custom</button>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Horário</label>
+        <input class="fi" id="aTime" type="time" value="07:00"></div>
+      <div class="fg"><label class="fl">Título</label>
+        <input class="fi" id="aTitle" placeholder="Meu alarme"></div>
+    </div>
+    <div class="fg"><label class="fl">Toque (20 opções)</label>
+      <select class="fi" id="aRing">
+        <option>🎵 Padrão do Sistema</option><option>🔔 Campainha Clássica</option>
+        <option>🎶 Melodia Suave</option><option>🚨 Alerta Urgente</option>
+        <option>🎸 Música Relaxante</option><option>⛪ Sino de Igreja</option>
+        <option>📳 Beep Digital</option><option>🎺 Fanfarra</option>
+        <option>📱 Toque de Celular</option><option>⏰ Alarme de Relógio</option>
+        <option>🌅 Canção da Manhã</option><option>🔊 Alerta Grave</option>
+        <option>🌴 Melodia Tropical</option><option>⚔️ Toque Medieval</option>
+        <option>🎷 Jazz Suave</option><option>🎸 Rock Energético</option>
+        <option>🎹 Clássica Piano</option><option>🌿 Sons da Natureza</option>
+        <option>⚡ Eletrônico</option><option>📂 Personalizado do Celular</option>
+      </select>
+    </div>
+    <div class="tr" style="margin-bottom:14px">
+      <div><b>Vibrar</b><div style="font-size:11px;color:var(--tx2)">Vibração junto com o toque</div></div>
+      <div class="tog on" id="aVib" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <button class="btn btn-p btn-f" onclick="addAlarm()">💾 Salvar Alarme</button>
+  </div>
+</div>
+
+<!-- PIN SETUP -->
+<div class="mo" id="mPin">
+  <div class="mb">
+    <div class="mh" id="pinMH">🔒 Configurar PIN <button class="mx" onclick="cm('mPin')">✕</button></div>
+    <div class="psteps">
+      <div class="pstep" id="pst0"></div>
+      <div class="pstep" id="pst1"></div>
+      <div class="pstep" id="pst2"></div>
+    </div>
+    <div style="text-align:center">
+      <div class="ln-sub" id="pinMSub" style="margin-bottom:16px">Digite o novo PIN (4 dígitos)</div>
+      <div class="dots" id="pinMDots" style="justify-content:center;margin-bottom:10px">
+        <div class="dot" id="pm0"></div><div class="dot" id="pm1"></div>
+        <div class="dot" id="pm2"></div><div class="dot" id="pm3"></div>
+      </div>
+      <div class="ln-err" id="pinMErr"></div>
+      <div class="kpad" style="margin:0 auto">
+        <button class="kk" onclick="spk('1')">1</button>
+        <button class="kk" onclick="spk('2')">2</button>
+        <button class="kk" onclick="spk('3')">3</button>
+        <button class="kk" onclick="spk('4')">4</button>
+        <button class="kk" onclick="spk('5')">5</button>
+        <button class="kk" onclick="spk('6')">6</button>
+        <button class="kk" onclick="spk('7')">7</button>
+        <button class="kk" onclick="spk('8')">8</button>
+        <button class="kk" onclick="spk('9')">9</button>
+        <div></div>
+        <button class="kk" onclick="spk('0')">0</button>
+        <button class="kk ghost" onclick="spd()">⌫</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EMPLOYEE -->
+<div class="mo" id="mEmp">
+  <div class="mb">
+    <div class="mh">👤 Novo Funcionário <button class="mx" onclick="cm('mEmp')">✕</button></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Nome *</label><input class="fi" id="eN" placeholder="Nome completo"></div>
+      <div class="fg"><label class="fl">CPF *</label><input class="fi" id="eCpf" placeholder="000.000.000-00"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Telefone</label><input class="fi" id="eTel" placeholder="(00) 00000-0000"></div>
+      <div class="fg"><label class="fl">Salário Base (R$)</label><input class="fi" id="eSal" type="number" placeholder="1500"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Entrada</label><input class="fi" id="eIn" type="time" value="08:00"></div>
+      <div class="fg"><label class="fl">Saída</label><input class="fi" id="eOut" type="time" value="17:00"></div>
+    </div>
+    <button class="btn btn-p btn-f" onclick="addEmp()">💾 Cadastrar Funcionário</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+//  ESTADO GLOBAL
+// ════════════════════════════════════════
+var DB = {
+  pin:'1234', pinOn:true, bioOn:false, theme:0,
+  tasks:[
+    {id:1,t:'Limpar sala e cozinha',d:'Varrer, pano e aspirar',c:'Limpeza',p:2,dt:'2025-06-10',done:false},
+    {id:2,t:'Lavar roupas',d:'Usar sabão em pó',c:'Lavanderia',p:1,dt:'2025-06-09',done:false},
+    {id:3,t:'Fazer almoço',d:'Arroz, feijão e bife',c:'Cozinha',p:2,dt:'2025-06-09',done:true},
+    {id:4,t:'Compras mercado',d:'Lista no celular',c:'Compras',p:0,dt:'2025-06-12',done:false},
+    {id:5,t:'Regar jardim',d:'Plantas do quintal',c:'Jardim',p:0,dt:'2025-06-11',done:false},
+  ],
+  employees:[
+    {id:1,name:'Maria Santos',cpf:'123.456.789-00',tel:'(11) 98765-4321',sal:1500,in:'08:00',out:'17:00'},
+    {id:2,name:'Ana Oliveira',cpf:'987.654.321-00',tel:'(11) 91234-5678',sal:1800,in:'07:00',out:'16:00'},
+  ],
+  salaries:[
+    {id:1,e:'Maria Santos',mo:6,yr:2025,b:1500,h:8,d:1,days:22,total:1720,paid:false},
+    {id:2,e:'Ana Oliveira',mo:6,yr:2025,b:1800,h:4,d:0,days:20,total:1872,paid:false},
+    {id:3,e:'Maria Santos',mo:5,yr:2025,b:1500,h:0,d:0,days:22,total:1500,paid:true},
+    {id:4,e:'Ana Oliveira',mo:5,yr:2025,b:1800,h:10,d:2,days:22,total:2100,paid:true},
+    {id:5,e:'Maria Santos',mo:4,yr:2025,b:1500,h:6,d:0,days:21,total:1609,paid:true},
+    {id:6,e:'Ana Oliveira',mo:4,yr:2025,b:1800,h:2,d:1,days:22,total:1920,paid:true},
+  ],
+  alarms:[
+    {id:1,t:'🚗 Ir ao trabalho',   tp:'go',   time:'07:30',ring:'Campainha Clássica',vib:true, on:true},
+    {id:2,t:'🏠 Sair do trabalho', tp:'leave', time:'17:00',ring:'Melodia Suave',    vib:true, on:true},
+    {id:3,t:'⚡ Tarefa Extra',      tp:'extra', time:'10:00',ring:'Beep Digital',     vib:false,on:false},
+  ],
+  nid:20
+};
+
+var MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var MO3=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+var THEMES=[
+  {n:'🌟 Ouro Real',     p:'#FFD700',bg:'#150E00',s:'#231800'},
+  {n:'💎 Diamante',      p:'#00BFFF',bg:'#000D1A',s:'#001428'},
+  {n:'🌹 Rosa Ouro',     p:'#C9829A',bg:'#1A0A10',s:'#2A1018'},
+  {n:'🔮 Ametista',      p:'#AB47BC',bg:'#0D0014',s:'#1A0024'},
+  {n:'🌊 Safira',        p:'#1565C0',bg:'#00081A',s:'#000F28'},
+  {n:'🌿 Esmeralda',     p:'#43A047',bg:'#001200',s:'#001E00'},
+  {n:'🖤 Ônix Luxo',     p:'#B0BEC5',bg:'#080808',s:'#121212'},
+  {n:'🤍 Pérola',        p:'#795548',bg:'#F9F6F2',s:'#FFFFFF'},
+  {n:'🌺 Rubi',          p:'#E53935',bg:'#160003',s:'#220006'},
+  {n:'🌙 Noite Estelar', p:'#7986CB',bg:'#020312',s:'#05061E'},
+  {n:'☀️ Sol Dourado',   p:'#FFB300',bg:'#1A0E00',s:'#261500'},
+  {n:'🌸 Cerejeira',     p:'#F06292',bg:'#160010',s:'#220018'},
+  {n:'🦋 Azul Royal',    p:'#5C6BC0',bg:'#00051A',s:'#000828'},
+  {n:'🌴 Tropical',      p:'#00BCD4',bg:'#001618',s:'#002226'},
+  {n:'🍷 Vinho',         p:'#AD1457',bg:'#14000A',s:'#200010'},
+  {n:'🎭 Platina',       p:'#78909C',bg:'#F5F5F5',s:'#FFFFFF'},
+  {n:'🔥 Fogo',          p:'#FF5722',bg:'#180400',s:'#260600'},
+  {n:'🌊 Turquesa',      p:'#26C6DA',bg:'#001418',s:'#002025'},
+  {n:'🏔️ Granito',       p:'#9E9E9E',bg:'#0C0C0C',s:'#181818'},
+  {n:'🌈 Aurora',        p:'#E040FB',bg:'#0A001E',s:'#140030'},
+  {n:'🥂 Champanhe',     p:'#B8860B',bg:'#FDF8F0',s:'#FFFFFF'},
+  {n:'🌑 Carbono',       p:'#00E5FF',bg:'#080808',s:'#121212'},
+  {n:'🌻 Âmbar',         p:'#FFA000',bg:'#180E00',s:'#241500'},
+];
+
+// ════════════════════════════════════════
+//  STARTUP
+// ════════════════════════════════════════
+(function init(){
+  applyTheme(0);
+  setTimeout(function(){
+    hide('sSplash');
+    if(DB.pinOn){ show('sLogin'); }
+    else{ show('sApp'); render('dash'); }
+  }, 2600);
+})();
+
+function show(id){ document.getElementById(id).classList.add('on'); }
+function hide(id){ document.getElementById(id).classList.remove('on'); }
+
+// ════════════════════════════════════════
+//  THEMES
+// ════════════════════════════════════════
+function applyTheme(i){
+  DB.theme=i;
+  var t=THEMES[i], r=document.documentElement.style;
+  r.setProperty('--p',t.p);
+  r.setProperty('--bg',t.bg);
+  r.setProperty('--s1',t.s);
+  var s2=lighten(t.s,14), s3=lighten(t.s,22);
+  r.setProperty('--s2',s2);
+  r.setProperty('--s3',s3);
+  var light=isLight(t.bg);
+  r.setProperty('--tx',light?'#111':'#FFF');
+  r.setProperty('--tx2',light?'#555':'#999');
+  r.setProperty('--pd',darken(t.p,30));
+}
+function lighten(hex,n){
+  hex=hex.replace('#','');
+  if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var r=Math.min(255,parseInt(hex.substr(0,2),16)+n);
+  var g=Math.min(255,parseInt(hex.substr(2,2),16)+n);
+  var b=Math.min(255,parseInt(hex.substr(4,2),16)+n);
+  return '#'+r.toString(16).padStart(2,'0')+g.toString(16).padStart(2,'0')+b.toString(16).padStart(2,'0');
+}
+function darken(hex,n){
+  hex=hex.replace('#','');
+  if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var r=Math.max(0,parseInt(hex.substr(0,2),16)-n);
+  var g=Math.max(0,parseInt(hex.substr(2,2),16)-n);
+  var b=Math.max(0,parseInt(hex.substr(4,2),16)-n);
+  return '#'+r.toString(16).padStart(2,'0')+g.toString(16).padStart(2,'0')+b.toString(16).padStart(2,'0');
+}
+function isLight(hex){
+  hex=hex.replace('#','');
+  if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var r=parseInt(hex.substr(0,2),16),g=parseInt(hex.substr(2,2),16),b=parseInt(hex.substr(4,2),16);
+  return (r*299+g*587+b*114)/1000>140;
+}
+
+// ════════════════════════════════════════
+//  PIN LOGIN
+// ════════════════════════════════════════
+var pBuf='', attempts=0, lkTimer=null;
+
+function pk(d){
+  if(lkTimer) return;
+  if(pBuf.length>=4) return;
+  pBuf+=d; updDots();
+  if(pBuf.length===4) setTimeout(checkPin,180);
+}
+function pd(){ pBuf=pBuf.slice(0,-1); updDots(); }
+function updDots(){
+  for(var i=0;i<4;i++) document.getElementById('dt'+i).classList.toggle('f',i<pBuf.length);
+}
+function checkPin(){
+  if(pBuf===DB.pin){
+    attempts=0;
+    document.getElementById('lErr').textContent='';
+    hide('sLogin'); show('sApp'); render('dash');
+  } else {
+    attempts++;
+    doShake('dots');
+    pBuf=''; updDots();
+    if(attempts>=5){ startLock(); }
+    else { document.getElementById('lErr').textContent='PIN incorreto — '+(5-attempts)+' tentativa(s) restante(s)'; }
+  }
+}
+function startLock(){
+  var sec=30, lEl=document.getElementById('lockEl'), eEl=document.getElementById('lErr');
+  lEl.style.display='block'; eEl.textContent='';
+  lkTimer=setInterval(function(){
+    lEl.textContent='⛔ '+sec+'s';
+    sec--;
+    if(sec<0){
+      clearInterval(lkTimer); lkTimer=null;
+      lEl.style.display='none'; attempts=0;
+      eEl.textContent='Tente novamente';
+    }
+  },1000);
+}
+function tryBio(){
+  if(!DB.pinOn){ alert('PIN não está ativo.'); return; }
+  var ok=window.confirm('🔐 Autenticação Biométrica\n\nSimulação: confirme para entrar\n\n[OK = Digital reconhecida | Cancelar = Falha]');
+  if(ok){ hide('sLogin'); show('sApp'); render('dash'); }
+  else { toast('❌ Biometria não reconhecida. Use o PIN.'); }
+}
+
+// ════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════
+var curPage='dash';
+function go(page, el){
+  curPage=page;
+  document.querySelectorAll('.nb').forEach(function(n){ n.classList.remove('on'); });
+  el.classList.add('on');
+  document.getElementById('fab').style.display=['tasks','salary','alarms','employees'].indexOf(page)>=0?'flex':'none';
+  render(page);
+}
+function openFab(){
+  var m={tasks:'mTask',salary:'mSal',alarms:'mAlarm',employees:'mEmp'};
+  if(m[curPage]) om(m[curPage]);
+}
+function om(id){ document.getElementById(id).classList.add('on'); }
+function cm(id){ document.getElementById(id).classList.remove('on'); }
+
+// ════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════
+function render(page){
+  var fns={dash:rDash,tasks:rTasks,salary:rSalary,alarms:rAlarms,cfg:rCfg};
+  if(fns[page]) fns[page]();
+  document.getElementById('area').scrollTop=0;
+}
+
+// ════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════
+function rDash(){
+  var pending=DB.tasks.filter(function(t){return !t.done;}).length;
+  var done=DB.tasks.filter(function(t){return t.done;}).length;
+  var totSal=DB.salaries.reduce(function(s,r){return s+r.total;},0);
+  var totH=DB.salaries.reduce(function(s,r){return s+r.h;},0);
+  var totD=DB.salaries.reduce(function(s,r){return s+r.days;},0);
+  var totExtra=DB.salaries.reduce(function(s,r){return s+(r.total-r.b);},0);
+  var aOn=DB.alarms.filter(function(a){return a.on;}).length;
+
+  var H=document.getElementById('area');
+  H.innerHTML='<div class="ph">🏠 Gestão Doméstica</div>'+
+
+  '<div class="g2">'+
+    sc('📋','Tarefas Pendentes',''+pending)+
+    sc('✅','Concluídas',''+done)+
+  '</div>'+
+
+  '<div class="g3">'+
+    sc3('💰','R$ '+fm(totSal),'Total Pago')+
+    sc3('⏰',''+totH+'h','H. Extras')+
+    sc3('📅',''+totD,'Dias Trab.')+
+  '</div>'+
+
+  '<div class="g2">'+
+    sc('👥','Funcionários',''+DB.employees.length)+
+    sc('🔔','Alarmes Ativos',''+aOn)+
+  '</div>'+
+
+  '<div class="card" style="background:linear-gradient(135deg,#1a2200,#222200);border-color:#333300;margin-bottom:10px">'+
+    '<div style="display:flex;align-items:center;gap:12px">'+
+      '<span style="font-size:30px">⭐</span>'+
+      '<div><div style="color:var(--tx2);font-size:12px">Ganho com Extras</div>'+
+      '<div style="font-size:22px;font-weight:700;color:var(--p)">R$ '+fm(totExtra)+'</div></div>'+
+    '</div>'+
+  '</div>'+
+
+  '<div class="card"><div class="ct">📊 Tarefas (Pizza)</div>'+
+    '<div class="chartbox">'+svgPie([pending,done],['#FF5722','#4CAF50'],['Pendentes','Concluídas'])+'</div></div>'+
+
+  '<div class="card"><div class="ct">💰 Salários por Período</div>'+
+    '<div class="chartbox">'+svgBar(DB.salaries.slice(0,6).map(function(r){return {l:MO3[r.mo-1],v:r.total};}))+'</div></div>'+
+
+  '<div class="card"><div class="ct">⏰ Horas Extras por Mês</div>'+
+    '<div class="chartbox">'+svgLine(DB.salaries.slice(0,6).map(function(r){return {l:MO3[r.mo-1],v:r.h};}))+'</div></div>';
+}
+function sc(icon,lbl,val){
+  return '<div class="sc"><div style="font-size:24px">'+icon+'</div>'+
+    '<div class="sv">'+val+'</div><div class="sl">'+lbl+'</div></div>';
+}
+function sc3(icon,val,lbl){
+  return '<div class="sc"><div style="font-size:20px">'+icon+'</div>'+
+    '<div class="sv" style="font-size:14px">'+val+'</div><div class="sl">'+lbl+'</div></div>';
+}
+
+// ════ INLINE SVG CHARTS ════
+function svgPie(vals,cols,lbls){
+  var total=vals.reduce(function(a,b){return a+b;},0);
+  if(!total) return '<div style="text-align:center;padding:30px;color:var(--tx2)">Sem dados</div>';
+  var W=280,H=160,cx=90,cy=80,r=65;
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">';
+  var angle=-Math.PI/2, i;
+  for(i=0;i<vals.length;i++){
+    if(!vals[i]) continue;
+    var slice=2*Math.PI*vals[i]/total;
+    var x1=cx+r*Math.cos(angle), y1=cy+r*Math.sin(angle);
+    var x2=cx+r*Math.cos(angle+slice), y2=cy+r*Math.sin(angle+slice);
+    var large=slice>Math.PI?1:0;
+    svg+='<path d="M'+cx+','+cy+' L'+x1+','+y1+' A'+r+','+r+' 0 '+large+' 1 '+x2+','+y2+' Z" fill="'+cols[i]+'"/>';
+    angle+=slice;
+  }
+  // hole
+  svg+='<circle cx="'+cx+'" cy="'+cy+'" r="35" fill="var(--s1)"/>';
+  // total text
+  svg+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" fill="var(--p)" font-size="14" font-weight="bold">'+total+'</text>';
+  // legend
+  var lx=175, ly=30;
+  for(i=0;i<vals.length;i++){
+    svg+='<rect x="'+lx+'" y="'+ly+'" width="14" height="14" rx="3" fill="'+cols[i]+'"/>';
+    svg+='<text x="'+(lx+18)+'" y="'+(ly+11)+'" fill="var(--tx2)" font-size="12">'+lbls[i]+' ('+vals[i]+')</text>';
+    ly+=24;
+  }
+  svg+='</svg>';
+  return svg;
+}
+function svgBar(data){
+  if(!data||!data.length) return '<div style="text-align:center;padding:30px;color:var(--tx2)">Sem dados</div>';
+  var W=300,H=160,pad=30,bw=28,gap=10;
+  var max=Math.max.apply(null,data.map(function(d){return d.v;}));
+  var P=THEMES[DB.theme].p;
+  var cols=['#FFD700','#00BFFF','#AB47BC','#43A047','#E53935','#FF5722'];
+  var svg='<svg viewBox="0 0 '+(pad+data.length*(bw+gap))+' '+H+'" width="100%" height="'+H+'">';
+  data.forEach(function(d,i){
+    var bh=max?Math.round((d.v/max)*(H-50)):0;
+    var x=pad+i*(bw+gap), y=H-25-bh;
+    svg+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="5" fill="'+(cols[i%cols.length])+'"/>';
+    svg+='<text x="'+(x+bw/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="var(--tx2)" font-size="11">'+d.l+'</text>';
+    svg+='<text x="'+(x+bw/2)+'" y="'+(y-4)+'" text-anchor="middle" fill="var(--tx2)" font-size="10">'+d.v+'</text>';
+  });
+  svg+='</svg>';
+  return svg;
+}
+function svgLine(data){
+  if(!data||!data.length) return '<div style="text-align:center;padding:30px;color:var(--tx2)">Sem dados</div>';
+  var W=300,H=150,pad=30;
+  var max=Math.max.apply(null,data.map(function(d){return d.v;}));
+  if(!max) max=1;
+  var P=THEMES[DB.theme].p;
+  var pts=data.map(function(d,i){
+    var x=pad+i*(W-pad*2)/(data.length-1||1);
+    var y=120-Math.round((d.v/max)*90);
+    return {x:x,y:y,l:d.l,v:d.v};
+  });
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'">';
+  // area
+  var aPath='M'+pts[0].x+',120';
+  pts.forEach(function(pt){ aPath+=' L'+pt.x+','+pt.y; });
+  aPath+=' L'+pts[pts.length-1].x+',120 Z';
+  svg+='<path d="'+aPath+'" fill="'+P+'22"/>';
+  // line
+  var lPath='M'+pts[0].x+','+pts[0].y;
+  pts.forEach(function(pt,i){ if(i) lPath+=' L'+pt.x+','+pt.y; });
+  svg+='<path d="'+lPath+'" stroke="'+P+'" stroke-width="2.5" fill="none"/>';
+  // dots + labels
+  pts.forEach(function(pt){
+    svg+='<circle cx="'+pt.x+'" cy="'+pt.y+'" r="5" fill="'+P+'"/>';
+    svg+='<text x="'+pt.x+'" y="135" text-anchor="middle" fill="var(--tx2)" font-size="11">'+pt.l+'</text>';
+    svg+='<text x="'+pt.x+'" y="'+(pt.y-8)+'" text-anchor="middle" fill="var(--tx2)" font-size="10">'+pt.v+'</text>';
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+// ════════════════════════════════════════
+//  TASKS
+// ════════════════════════════════════════
+var CAT_ICON={Limpeza:'🧹',Cozinha:'🍳',Lavanderia:'👕',Jardim:'🌱',Compras:'🛒',Organização:'📦',Outro:'📌'};
+function rTasks(){
+  var pending=DB.tasks.filter(function(t){return !t.done;});
+  var done=DB.tasks.filter(function(t){return t.done;});
+  var H=document.getElementById('area');
+  H.innerHTML='<div class="ph">📋 Tarefas</div>';
+  if(!DB.tasks.length){ H.innerHTML+='<div class="empty"><div class="ei">📋</div><div>Nenhuma tarefa. Toque + para adicionar!</div></div>'; return; }
+  if(pending.length) H.innerHTML+='<div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px">⏳ PENDENTES ('+pending.length+')</div>'+pending.map(taskCard).join('');
+  if(done.length)    H.innerHTML+='<div style="font-size:12px;font-weight:700;color:var(--tx2);margin:10px 0 8px">✅ CONCLUÍDAS</div>'+done.map(taskCard).join('');
+}
+function taskCard(t){
+  var pMap={2:'🔴 Alta',1:'🟡 Média',0:'🟢 Baixa'};
+  var pCl={2:'b-e',1:'b-w',0:'b-ok'};
+  return '<div class="li" style="'+(t.done?'opacity:.5':'')+'">'+
+    '<div class="av" style="'+(t.done?'background:#333':'background:var(--p)')+'">'+
+      (CAT_ICON[t.c]||'📌')+
+    '</div>'+
+    '<div class="ib">'+
+      '<div class="in" style="'+(t.done?'text-decoration:line-through':'')+'">'+e(t.t)+'</div>'+
+      '<div class="is">'+e(t.d)+'</div>'+
+      '<div style="margin-top:5px">'+
+        '<span class="badge b-i">'+e(t.c)+'</span>'+
+        '<span class="badge '+pCl[t.p]+'">'+pMap[t.p]+'</span>'+
+        (t.dt?'<span class="badge b-g">📅 '+fd(t.dt)+'</span>':'')+
+      '</div>'+
+    '</div>'+
+    '<div class="ia">'+
+      (!t.done?'<button class="btn btn-o btn-s" onclick="okTask('+t.id+')">✅</button>':'')+
+      '<button class="btn btn-s" style="background:#2a1010;color:#f66;border:none" onclick="delTask('+t.id+')">🗑️</button>'+
+    '</div>'+
+  '</div>';
+}
+function addTask(){
+  var title=document.getElementById('tT').value.trim();
+  if(!title){ alert('Informe o título!'); return; }
+  DB.tasks.push({id:DB.nid++,t:title,d:v('tD'),c:v('tC'),p:+v('tP'),dt:v('tDt'),done:false});
+  ['tT','tD','tDt'].forEach(function(id){ document.getElementById(id).value=''; });
+  cm('mTask'); rTasks(); toast('✅ Tarefa adicionada!');
+}
+function okTask(id){ var t=DB.tasks.find(function(x){return x.id===id;}); if(t) t.done=true; rTasks(); toast('✅ Concluída!'); }
+function delTask(id){ if(confirm('Excluir esta tarefa?')){ DB.tasks=DB.tasks.filter(function(t){return t.id!==id;}); rTasks(); } }
+
+// ════════════════════════════════════════
+//  SALARY
+// ════════════════════════════════════════
+function rSalary(){
+  var totSal=DB.salaries.reduce(function(s,r){return s+r.total;},0);
+  var totH=DB.salaries.reduce(function(s,r){return s+r.h;},0);
+  var H=document.getElementById('area');
+  H.innerHTML='<div class="ph">💰 Controle de Salário</div>'+
+    '<div class="g2">'+
+      sc('💵','Total Acumulado','R$ '+fm(totSal))+
+      sc('⭐','Horas Extras Total',''+totH+'h')+
+    '</div>'+
+    (DB.salaries.length?'':'<div class="empty"><div class="ei">💰</div><div>Nenhum registro. Toque + para adicionar!</div></div>')+
+    DB.salaries.map(salCard).join('');
+}
+function salCard(r){
+  return '<div class="li">'+
+    '<div class="av" style="'+(r.paid?'background:#1a3a1a':'background:#2a1a00')+'">'+
+      (r.paid?'💚':'⏳')+
+    '</div>'+
+    '<div class="ib">'+
+      '<div class="in">'+e(r.e)+'</div>'+
+      '<div class="is">'+MONTHS[r.mo-1]+' / '+r.yr+' — '+r.days+' dias</div>'+
+      '<div style="margin-top:4px">'+
+        '<span class="badge b-i">Base: R$ '+fm(r.b)+'</span>'+
+        (r.h?'<span class="badge b-w">+'+r.h+'h extra</span>':'')+
+        (r.d?'<span class="badge b-w">+'+r.d+'d extra</span>':'')+
+        '<span class="badge '+(r.paid?'b-ok':'b-e')+'">'+(r.paid?'✅ Pago':'⏳ Pendente')+'</span>'+
+      '</div>'+
+      '<div class="iv">TOTAL: R$ '+fm(r.total)+'</div>'+
+    '</div>'+
+    '<div class="ia">'+
+      (!r.paid?'<button class="btn btn-o btn-s" onclick="payNow('+r.id+')">Pagar</button>':'')+
+      '<button class="btn btn-s" style="background:#2a1010;color:#f66;border:none" onclick="delSal('+r.id+')">🗑️</button>'+
+    '</div>'+
+  '</div>';
+}
+function calcSal(){
+  var b=+v('sB')||0, h=+v('sH')||0, d=+v('sEx')||0;
+  var hv=h*(b/220)*1.5, dv=d*(b/30);
+  var tot=b+hv+dv;
+  document.getElementById('sPrev').style.display='block';
+  document.getElementById('sPrevV').textContent='TOTAL: R$ '+fm(tot);
+  document.getElementById('sPrevD').textContent='Base R$ '+fm(b)+' + HExtra R$ '+fm(hv)+' + DExtra R$ '+fm(dv);
+  document.getElementById('sPrev')._t=tot;
+}
+function addSal(){
+  var emp=v('sE').trim(); if(!emp){ alert('Informe o funcionário!'); return; }
+  var b=+v('sB')||0, h=+v('sH')||0, d=+v('sEx')||0, days=+v('sDy')||0;
+  var hv=h*(b/220)*1.5, dv=d*(b/30);
+  DB.salaries.unshift({id:DB.nid++,e:emp,mo:+v('sM'),yr:+v('sY'),b:b,h:h,d:d,days:days,total:b+hv+dv,paid:false});
+  ['sE','sB','sH','sEx','sDy'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('sPrev').style.display='none';
+  cm('mSal'); rSalary(); toast('💰 Registro salvo!');
+}
+function payNow(id){ var r=DB.salaries.find(function(x){return x.id===id;}); if(r){r.paid=true; rSalary(); toast('✅ Marcado como pago!');} }
+function delSal(id){ if(confirm('Excluir registro?')){ DB.salaries=DB.salaries.filter(function(r){return r.id!==id;}); rSalary(); } }
+
+// ════════════════════════════════════════
+//  ALARMS
+// ════════════════════════════════════════
+var curAlarmType='go';
+function setAT(tp){
+  curAlarmType=tp;
+  ['go','leave','extra','custom'].forEach(function(t){
+    var btn=document.getElementById('at_'+t);
+    btn.className=t===tp?'btn btn-p btn-s':'btn btn-o btn-s';
+  });
+  var def={go:'🚗 Ir ao Trabalho',leave:'🏠 Sair do Trabalho',extra:'⚡ Tarefa Extra',custom:'Meu alarme'};
+  document.getElementById('aTitle').placeholder=def[tp]||'Alarme';
+}
+function rAlarms(){
+  var aOn=DB.alarms.filter(function(a){return a.on;}).length;
+  var H=document.getElementById('area');
+  H.innerHTML='<div class="ph">🔔 Alarmes</div>'+
+    '<div class="card" style="margin-bottom:10px">'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        '<span class="badge b-ok">'+aOn+' ativo(s)</span>'+
+        '<span class="badge b-i">'+DB.alarms.length+' total</span>'+
+        '<span class="badge b-w">20 toques disponíveis</span>'+
+      '</div>'+
+    '</div>'+
+    (DB.alarms.length?'':'<div class="empty"><div class="ei">🔔</div><div>Nenhum alarme. Toque + para adicionar!</div></div>')+
+    DB.alarms.map(alarmCard).join('');
+}
+function alarmCard(a){
+  var typeL={go:'🚗 Ir ao Trabalho',leave:'🏠 Sair do Trabalho',extra:'⚡ Tarefa Extra',custom:'🔔 Custom'};
+  return '<div class="li">'+
+    '<div class="ib">'+
+      '<div class="at">'+a.time+'</div>'+
+      '<div class="in">'+e(a.t)+'</div>'+
+      '<div class="is">'+(typeL[a.tp]||a.tp)+'</div>'+
+      '<div class="is">🎵 '+e(a.ring)+(a.vib?' 📳':'')+'</div>'+
+    '</div>'+
+    '<div class="ia">'+
+      '<div class="tog '+(a.on?'on':'')+'" onclick="togAlarm('+a.id+')"></div>'+
+      '<button class="btn btn-s" style="background:#2a1010;color:#f66;border:none" onclick="delAlarm('+a.id+')">🗑️</button>'+
+    '</div>'+
+  '</div>';
+}
+function addAlarm(){
+  var time=v('aTime'), title=v('aTitle').trim();
+  var ring=document.getElementById('aRing').value;
+  var vib=document.getElementById('aVib').classList.contains('on');
+  if(!title){var def={go:'🚗 Ir ao Trabalho',leave:'🏠 Sair do Trabalho',extra:'⚡ Tarefa Extra',custom:'🔔 Alarme'}; title=def[curAlarmType];}
+  DB.alarms.push({id:DB.nid++,t:title,tp:curAlarmType,time:time,ring:ring,vib:vib,on:true});
+  document.getElementById('aTitle').value='';
+  cm('mAlarm'); rAlarms(); toast('🔔 Alarme adicionado!');
+}
+function togAlarm(id){ var a=DB.alarms.find(function(x){return x.id===id;}); if(a){a.on=!a.on; rAlarms();} }
+function delAlarm(id){ if(confirm('Excluir alarme?')){ DB.alarms=DB.alarms.filter(function(a){return a.id!==id;}); rAlarms(); } }
+
+// ════════════════════════════════════════
+//  SETTINGS / CONFIG
+// ════════════════════════════════════════
+function rCfg(){
+  var T=THEMES[DB.theme];
+  var H=document.getElementById('area');
+  H.innerHTML='<div class="ph">⚙️ Configurações</div>'+
+
+  '<div style="font-size:11px;font-weight:700;color:var(--p);letter-spacing:1px;margin-bottom:8px">🔐 SEGURANÇA</div>'+
+  '<div class="card" style="margin-bottom:10px">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'+
+      '<span style="font-size:28px">'+(DB.pinOn?'🔒':'🔓')+'</span>'+
+      '<div style="flex:1"><div style="font-weight:600">'+(DB.pinOn?'PIN Ativado':'Sem Proteção')+'</div>'+
+        '<div style="font-size:12px;color:var(--tx2)">PIN atual: '+(DB.pinOn?'••••':'não configurado')+'</div></div>'+
+      '<span class="badge '+(DB.pinOn?'b-ok':'b-e')+'">'+(DB.pinOn?'Ativo':'Inativo')+'</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+      '<button class="btn btn-p btn-s" onclick="openPinSetup(\''+(DB.pinOn?'change':'set')+'\')">'+(DB.pinOn?'🔑 Trocar PIN':'🔒 Criar PIN')+'</button>'+
+      (DB.pinOn?'<button class="btn btn-s" style="border:2px solid var(--err);color:var(--err);background:transparent" onclick="removePin()">🗑️ Remover PIN</button>':'')+
+    '</div>'+
+  '</div>'+
+
+  '<div class="card" style="margin-bottom:16px">'+
+    '<div class="tr">'+
+      '<div><div style="font-weight:600">👆 Digital / Rosto</div>'+
+        '<div style="font-size:12px;color:var(--tx2)">'+(DB.pinOn?'Acesso biométrico':'Configure o PIN primeiro')+'</div></div>'+
+      '<div class="tog '+(DB.bioOn&&DB.pinOn?'on':'')+'" onclick="togBio()"></div>'+
+    '</div>'+
+    (DB.bioOn&&DB.pinOn?'<div class="badge b-ok" style="margin-top:8px">✅ Biometria habilitada</div>':'')+
+  '</div>'+
+
+  '<div style="font-size:11px;font-weight:700;color:var(--p);letter-spacing:1px;margin-bottom:8px">🎨 TEMAS LUXUOSOS (23)</div>'+
+  '<div class="tg">'+THEMES.map(function(th,i){
+    var light=isLight(th.bg);
+    return '<div class="tc '+(DB.theme===i?'sel':'')+'" '+
+      'style="background:linear-gradient(135deg,'+th.bg+','+th.p+'55);color:'+(light?'#111':'#fff')+'" '+
+      'onclick="pickTheme('+i+')">'+th.n+'</div>';
+  }).join('')+'</div>'+
+
+  '<div style="font-size:11px;font-weight:700;color:var(--p);letter-spacing:1px;margin:12px 0 8px">👤 FUNCIONÁRIOS ('+DB.employees.length+')</div>'+
+  '<div class="card" style="margin-bottom:10px">'+
+    DB.employees.map(function(emp){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--s3)">'+
+        '<span style="font-size:24px">👤</span>'+
+        '<div style="flex:1"><div style="font-weight:600">'+e(emp.name)+'</div>'+
+        '<div style="font-size:11px;color:var(--tx2)">CPF: '+e(emp.cpf)+' | '+e(emp.tel)+'</div>'+
+        '<div style="font-size:12px;color:var(--p);font-weight:700">R$ '+fm(emp.sal)+' | '+emp.in+' – '+emp.out+'</div></div>'+
+        '<button class="btn btn-s" style="background:#2a1010;color:#f66;border:none" onclick="delEmp('+emp.id+')">🗑️</button>'+
+      '</div>';
+    }).join('')+
+    '<button class="btn btn-o btn-f" style="margin-top:10px" onclick="om(\'mEmp\')">＋ Adicionar Funcionário</button>'+
+  '</div>'+
+
+  '<div style="font-size:11px;font-weight:700;color:var(--p);letter-spacing:1px;margin-bottom:8px">ℹ️ SOBRE</div>'+
+  '<div class="card">'+
+    '<div style="font-size:16px;font-weight:700;color:var(--p)">🏠 Gestão Doméstica</div>'+
+    '<div style="font-size:12px;color:var(--tx2);margin-top:4px">Versão 2.0 — 2025</div>'+
+    '<div style="font-size:12px;color:var(--tx2);margin-top:4px">Gerenciamento completo para empregadas domésticas.<br>Funciona 100% offline.</div>'+
+  '</div><div style="height:16px"></div>';
+}
+function pickTheme(i){
+  applyTheme(i);
+  rCfg();
+  toast('🎨 Tema '+THEMES[i].n+' aplicado!');
+}
+function togBio(){
+  if(!DB.pinOn){ alert('Configure um PIN primeiro!'); return; }
+  if(!DB.bioOn){
+    if(confirm('Habilitar biometria?\nSua digital/rosto será usada para autenticar.')){ DB.bioOn=true; toast('✅ Biometria habilitada!'); }
+  } else { DB.bioOn=false; toast('Biometria desabilitada.'); }
+  rCfg();
+}
+function removePin(){
+  if(!confirm('Remover PIN?\n\nO app ficará sem proteção de acesso!')) return;
+  DB.pinOn=false; DB.bioOn=false; toast('PIN removido.'); rCfg();
+}
+function addEmp(){
+  var name=v('eN').trim(), cpf=v('eCpf').trim();
+  if(!name||!cpf){ alert('Nome e CPF obrigatórios!'); return; }
+  DB.employees.push({id:DB.nid++,name:name,cpf:cpf,tel:v('eTel'),sal:+v('eSal')||0,in:v('eIn'),out:v('eOut')});
+  ['eN','eCpf','eTel','eSal'].forEach(function(id){ document.getElementById(id).value=''; });
+  cm('mEmp'); rCfg(); toast('👤 Funcionário cadastrado!');
+}
+function delEmp(id){ if(confirm('Excluir funcionário?')){ DB.employees=DB.employees.filter(function(e){return e.id!==id;}); rCfg(); } }
+
+// ════════════════════════════════════════
+//  PIN SETUP (in settings)
+// ════════════════════════════════════════
+var sBuf='', sFirst='', sStep=1, sMode='set';
+function openPinSetup(mode){
+  sMode=mode; sBuf=''; sFirst=''; sStep=(mode==='change'?0:1);
+  document.getElementById('pinMH').innerHTML=(mode==='change'?'🔑 Trocar PIN':'🔒 Criar PIN')+
+    ' <button class="mx" onclick="cm(\'mPin\')">✕</button>';
+  updSetupUI();
+  clearSetupDots();
+  document.getElementById('pinMErr').textContent='';
+  om('mPin');
+}
+function spk(d){ if(sBuf.length>=4) return; sBuf+=d; updSetupDots(); if(sBuf.length===4) setTimeout(doSetup,200); }
+function spd(){ sBuf=sBuf.slice(0,-1); updSetupDots(); }
+function updSetupDots(){ for(var i=0;i<4;i++) document.getElementById('pm'+i).classList.toggle('f',i<sBuf.length); }
+function clearSetupDots(){ for(var i=0;i<4;i++) document.getElementById('pm'+i).classList.remove('f'); }
+function updSetupUI(){
+  var subs={0:'Digite o PIN atual',1:'Digite o novo PIN (4 dígitos)',2:'Confirme o novo PIN'};
+  document.getElementById('pinMSub').textContent=subs[sStep]||'';
+  for(var i=0;i<3;i++) document.getElementById('pst'+i).className='pstep'+(i<sStep?' on':'');
+}
+function doSetup(){
+  if(sStep===0){
+    if(sBuf===DB.pin){ sStep=1; sBuf=''; clearSetupDots(); updSetupUI(); document.getElementById('pinMErr').textContent=''; }
+    else { shakeSetupDots(); sBuf=''; clearSetupDots(); document.getElementById('pinMErr').textContent='PIN atual incorreto.'; }
+  } else if(sStep===1){
+    sFirst=sBuf; sBuf=''; clearSetupDots(); sStep=2; updSetupUI();
+  } else {
+    if(sBuf===sFirst){
+      DB.pin=sBuf; DB.pinOn=true;
+      cm('mPin'); rCfg(); toast('✅ PIN configurado!');
+    } else {
+      sStep=1; sBuf=''; sFirst=''; clearSetupDots();
+      shakeSetupDots(); document.getElementById('pinMErr').textContent='PINs não coincidem. Tente novamente.';
+      updSetupUI();
+    }
+  }
+}
+function shakeSetupDots(){ doShake('pinMDots'); }
+
+// ════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════
+function fm(n){ return (+n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fd(d){ if(!d) return ''; var p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function e(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function v(id){ return document.getElementById(id).value; }
+
+var _tTimer=null;
+function toast(msg){
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  if(_tTimer) clearTimeout(_tTimer);
+  _tTimer=setTimeout(function(){ el.classList.remove('show'); },2600);
+}
+
+function doShake(id){
+  var el=document.getElementById(id); if(!el) return;
+  el.classList.remove('shake');
+  void el.offsetWidth;
+  el.classList.add('shake');
+  setTimeout(function(){ el.classList.remove('shake'); },550);
+}
+
+// Close modals on backdrop click
+document.querySelectorAll('.mo').forEach(function(mo){
+  mo.addEventListener('click',function(e){ if(e.target===mo) mo.classList.remove('on'); });
+});
+</script>
+</body>
+</html>
