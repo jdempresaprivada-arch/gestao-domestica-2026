@@ -1,0 +1,1 @@
+# gestao-domestica-2026
